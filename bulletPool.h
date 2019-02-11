@@ -1,0 +1,66 @@
+#pragma once
+#include "gameNode.h"
+#include <vector>
+
+
+class Bullet : public gameNode
+{
+private:
+	image* _bulletImage;		//ÃÑ¾ËÀÌ¹ÌÁö
+	RECT _rc;					//ÃÑ¾Ë·ºÆ®
+	float _x, _y;				//ÃÑ¾Ë ÁÂÇ¥
+	float _fireX, _fireY;		//ÃÑ¾Ë ¹ß»çÀ§Ä¡(X,Y)
+	float _angle;				//ÃÑ¾Ë °¢µµ
+	float _radius;				//ÃÑ¾Ë ¹ÝÁö¸§
+	float _speed;				//ÃÑ¾Ë ½ºÇÇµå
+	float _range;				//ÃÑ¾Ë ÃÖ´ë »ç°Å¸®
+	
+	bool _isActive;
+public:
+	Bullet();
+	~Bullet();
+
+	void init(image* image, float radius, float range);
+	void release();
+	void update();
+	void render();
+
+	void bulletFire(float x, float y, float angle, float speed);
+
+	void bulletMove();
+
+public:
+
+	//È°µ¿ÁßÀÎ ÃÑ¾Ë ¿©ºÎ
+	void setActive(bool isActive)	{ _isActive = isActive; }
+	bool getActive() const			{ return _isActive; }
+
+	RECT getRC() const				{ return _rc; }
+};
+
+//ºæ·¿ Ç®~
+class BulletPool
+{
+private:
+	float _defaultRange;
+	float _defaultRadius;
+	const char* _imageName;
+
+	vector<Bullet*> _disableBullets;//¾È¾²´Â°Å
+	vector<Bullet*> _enableBullets;//¾²´Â°Å
+public:
+	BulletPool();
+	~BulletPool();
+
+	void init(const char* imageName, int createBullet = 16000, float range = 1200.0f, float radius = 10.0f);
+	void release();
+	void update();
+	void render();
+
+	void fire(float x, float y, float angle, float speed);
+
+
+public:
+	//¹ß»çµÈ ÃÑ¾Ë º¤ÅÍ
+	vector<Bullet*> getActiveBullets()const { return _enableBullets; }
+};
